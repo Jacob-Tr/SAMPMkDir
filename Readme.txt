@@ -3,5 +3,5 @@
      CON, PRN, AUX, NUL, COM0-9, LPT0-9 in Windows or those which contain: '/', '\', ':', '*', '?', ' " ', '<', '>' or '|'; as 
      well as file names which contain solely; a period, a space or are empty.
 29/04/2021 - 
- Various linux compatbilitiy fixes.
- MkDir.so added to binaries.
+ Various Linux compatbilitiy fixes.
+ MkDir.so (Shared Object) added to binaries. The .dll version is for Windows while to .so file works only on Linux.
