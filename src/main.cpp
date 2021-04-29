@@ -1,7 +1,14 @@
-#include "Headers\AMXMain.h"
+#ifndef WIN32
+#include <unistd.h>
+#define _malloca malloc
+#define _mkdir rmdir
+#else#include "Headers\Unistd.h"
+#endif
+
+#include "Headers/AMXMain.h"
 
 #include "SDK\amx\amx.h"
-#include "SDK\plugincommon.h" 
+#include "SDK\plugincommon.h"
 
 char dir[LOCALE_NAME_MAX_LENGTH + 5] = "";
 
@@ -14,7 +21,7 @@ cell AMX_NATIVE_CALL MkDir(AMX* amx, cell* params)
 
     amx_StrParam(amx, params[1], string);
 
-    if(!IsValidFolderName(string)) return 0;
+    if(strlen(string) == 0) return 0;
 
 #ifdef WIN32
     snprintf(new_dir, LOCALE_NAME_MAX_LENGTH, "%s\\%s", dir, string);
