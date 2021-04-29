@@ -5,5 +5,5 @@
       CON, PRN, AUX, NUL, COM0-9, LPT0-9 in Windows or those which contain: '/', '\', ':', '*', '?', ' " ', '<', '>' or '|'; as 
       well as file names which contain solely; a period, a space or are empty.
 29/04/2021 - 
- Various Linux compatbilitiy fixes.
+ Some Linux compatbilitiy fixes.
  MkDir.so added to binaries.
