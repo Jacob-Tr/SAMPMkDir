@@ -4,4 +4,4 @@
      well as file names which contain solely; a period, a space or are empty.
 29/04/2021 - 
  Various Linux compatbilitiy fixes.
- MkDir.so (Shared Object) added to binaries. The .dll version is for Windows while to .so file works only on Linux.
+ MkDir.so (Shared Object) added to binaries. The .dll version is for Windows while the .so file works only on Linux.
