@@ -7,3 +7,6 @@
 29/04/2021 - 
  Some Linux compatabilitiy fixes.
  MkDir.so added to binaries.
+30/04/2021 - 
+ Some bug fixes.
+ 'Rmdir()' and 'ChDir()' added.
