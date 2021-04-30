@@ -9,4 +9,4 @@
  MkDir.so added to binaries.
 30/04/2021 - 
  Some bug fixes.
- 'RmDir()' and 'ChDir()' native function added. (Remove Directory and Check Directory(existence) respectively)
+ 'RmDir()' and 'ChDir()' native functions added. (Remove Directory and Check Directory(existence) respectively)
