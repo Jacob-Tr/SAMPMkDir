@@ -11,13 +11,12 @@
 
 #include "SDK\amx\amx.h"
 #include "SDK\plugincommon.h"
-#include "../Headers/AMXMain.h"
 
 char dir[LOCALE_NAME_MAX_LENGTH + 5] = "";
 
-int DoesFileExist(char* dir)
+cell DoesFileExist(char* dir)
 {
-    int success = 0;
+    cell success = 0;
 #ifdef WIN32
     success = _mkdir(dir);
 #else
