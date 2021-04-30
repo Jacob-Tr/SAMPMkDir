@@ -1,7 +1,8 @@
 #ifndef WIN32
 #include <unistd.h>
+#include <sys\stat.h>
 #define _malloca malloc
-#define _mkdir rmdir
+#define _mkdir mkdir
 #else
 #include "Headers\Unistd.h"
 #endif
@@ -35,7 +36,11 @@ cell AMX_NATIVE_CALL MkDir(AMX* amx, cell* params)
     snprintf(str, 128, "<Plugin> File Created: scriptfiles/%s", new_dir);
 
     logprintf(str);
+#ifdef WIN32
     _mkdir(new_dir);
+#else
+	_mkdir(new_dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
     return 1;
 }
 
