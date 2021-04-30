@@ -5,3 +5,5 @@
 #endif
 
 native MkDir(folder_name[]);
+native ChDir(folder_name[]);
+native RmDir(folder_name[]);
