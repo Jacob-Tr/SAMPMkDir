@@ -7,14 +7,16 @@
 #include "Headers\Unistd.h"
 #endif
 
+char debug[256];
+
 #include "Headers\AMXMain.h"
 
 #include "SDK\amx\amx.h"
 #include "SDK\plugincommon.h"
 
-char dir[LOCALE_NAME_MAX_LENGTH + 5] = "";
+char dir[228] = "";
 
-cell DoesFileExist(char* dir)
+cell DoesFolderExist(const char* dir)
 {
     cell success = 0;
 #ifdef WIN32
@@ -23,25 +25,23 @@ cell DoesFileExist(char* dir)
     success = mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
 
-    if(success == -1) return 1;
+    if(success != 0) return 1;
 #ifdef WIN32
     _rmdir(dir);
 #else
     rmdir(dir);
 #endif
+
     return 0;
 }
 
 void GetDirectory(const char* string, char* dest)
 {
-    char new_dir[LOCALE_NAME_MAX_LENGTH];
 #ifdef WIN32
-    snprintf(new_dir, LOCALE_NAME_MAX_LENGTH, "%s\\%s", dir, string);
+    snprintf(dest, 256, "%s\\%s", dir, string);
 #else
-    snprintf(new_dir, LOCALE_NAME_MAX_LENGTH, "%s/%s", dir, string);
+    snprintf(dest, 256, "%s/%s", dir, string);
 #endif
-
-    dest = new_dir;
 }
 
 cell AMX_NATIVE_CALL RmDir(AMX* amx, cell* params)
@@ -53,7 +53,7 @@ cell AMX_NATIVE_CALL RmDir(AMX* amx, cell* params)
 	char dir[LOCALE_NAME_MAX_LENGTH];
 	GetDirectory(string, dir);
 
-	if(!DoesFileExist(dir)) return 0;
+	if(!DoesFolderExist(dir)) return 0;
 	
 	char str[128] = "";
 	snprintf(str, 128, "<Plugin> Folder Deleted: scriptfiles/%s", string);
@@ -76,8 +76,7 @@ cell AMX_NATIVE_CALL ChDir(AMX* amx, cell* params)
 
     char dir[LOCALE_NAME_MAX_LENGTH];
     GetDirectory(string, dir);
-
-    return DoesFileExist(dir);
+    return DoesFolderExist(dir);
 }
 
 cell AMX_NATIVE_CALL MkDir(AMX* amx, cell* params)
@@ -91,7 +90,7 @@ cell AMX_NATIVE_CALL MkDir(AMX* amx, cell* params)
 	char new_dir[LOCALE_NAME_MAX_LENGTH];
     GetDirectory(string, new_dir);
 
-    if(DoesFileExist(new_dir)) return 0;
+    if(DoesFolderExist(new_dir)) return 0;
 
     char str[128] = "";
     snprintf(str, 128, "<Plugin> Folder Created: scriptfiles/%s", string);
@@ -103,6 +102,8 @@ cell AMX_NATIVE_CALL MkDir(AMX* amx, cell* params)
 #endif
 	
 	logprintf(str);
+
+    logprintf("MkDir finished");
     return 1;
 }
 
@@ -115,10 +116,10 @@ PLUGIN_EXPORT int PLUGIN_CALL Load(void **ppData)
 
     snprintf(dir, LOCALE_NAME_MAX_LENGTH, "%s", getcwd(dir, LOCALE_NAME_MAX_LENGTH));
 
-    char folder_dir[128];
-    snprintf(folder_dir, (LOCALE_NAME_MAX_LENGTH + 20), "<Plugin> Loaded at: %s", dir);
-
     GetDirectory("scriptfiles", dir);
+
+    char folder_dir[LOCALE_NAME_MAX_LENGTH];
+    snprintf(folder_dir, LOCALE_NAME_MAX_LENGTH, "<Plugin> Loaded at: %s", dir);
 
     logprintf(folder_dir);
     return 1;
