@@ -1,8 +1,9 @@
 #undef LOCALE_NAME_MAX_LENGTH
 
 #ifndef WIN32
+#include <alloca.h>
 #include <unistd.h>
-#include <sys\stat.h>
+#include <sys/stat.h>
 #include "Headers/amx/sclinux.h"
 #else
 #include <direct.h>
@@ -10,16 +11,34 @@
 
 char debug[256];
 
+#if defined WIN32 || defined _WIN32 || defined __WIN32__
 #include "Headers\amx\amx.h"
 #include "Headers\plugincommon.h"
 
 #include "Headers\AMXMain.h"
+#else
+#undef LINUX
+#define LINUX
+
+#undef bool
+typedef _Bool bool;
+
+#include "Headers/amx/amx.h"
+#include "Headers/plugincommon.h"
+
+#include "Headers/AMXMain.h"
+
+#define _rmdir rmdir
+#define _chdir chdir
+#define _getcwd getcwd
+#endif
 
 char dir[228] = "";
 
 cell DoesFolderExist(const char* dir)
 {
     cell success = 0;
+
 #ifdef WIN32
     success = _mkdir(dir);
 #else
@@ -27,11 +46,8 @@ cell DoesFolderExist(const char* dir)
 #endif
 
     if(success != 0) return 1;
-#ifdef WIN32
+
     _rmdir(dir);
-#else
-    rmdir(dir);
-#endif
 
     return 0;
 }
@@ -47,23 +63,34 @@ void GetDirectory(const char* string, char* dest)
 
 cell AMX_NATIVE_CALL RmDir(AMX* amx, cell* params)
 {
-	char* string = nullptr;
+	char* string = (char*) malloc(sizeof(char) * 128);
+    int length = 0;
+
+    if(amx_StrLen(params, &length) > (128 - 1))
+    {
+        logprintf((char*)"Error <RmDir>: Invalid directory length");
+        free(string);
+        return 0;
+    }
 
 	amx_StrParam(amx, params[1], string);
 
 	char dir[LOCALE_NAME_MAX_LENGTH];
 	GetDirectory(string, dir);
 
-	if(!DoesFolderExist(dir)) return 0;
-	
+    if(!DoesFolderExist(dir))
+    {
+        logprintf((char*)"Error <RmDir>: Directory does not exist: %s.", dir);
+        free(string);
+        return 0;
+    }
+
 	char str[128] = "";
 	snprintf(str, 128, "<Plugin> Folder Deleted: scriptfiles/%s", string);
+
+    free(string);
 	
-#ifdef WIN32
 	_rmdir(dir);
-#else
-	rmdir(dir);
-#endif
 	
 	logprintf(str);
 	return 1;
@@ -71,25 +98,43 @@ cell AMX_NATIVE_CALL RmDir(AMX* amx, cell* params)
 
 cell AMX_NATIVE_CALL ChDir(AMX* amx, cell* params)
 {
-    char* string = nullptr;
+    char* string = (char*) malloc(sizeof(char*) * 128);
 
     amx_StrParam(amx, params[1], string);
 
     char dir[LOCALE_NAME_MAX_LENGTH];
     GetDirectory(string, dir);
+
+    free(string);
+
     return DoesFolderExist(dir);
 }
 
 cell AMX_NATIVE_CALL MkDir(AMX* amx, cell* params)
 {
-    char* string = nullptr;
+    char* string = (char*) malloc(sizeof(char) * 128);
+    int length = 0;
+
+    if (amx_StrLen(params, &length) > (128 - 1))
+    {
+        logprintf((char*) "Error <MkDir>: Invalid directory length");
+        free(string);
+        return 0;
+    }
 
     amx_StrParam(amx, params[1], string);
 
-    if(!IsValidFolderName(string)) return 0;
+    if(!IsValidFolderName(string))
+    {
+        logprintf((char*) "Error <MkDir>: Invalid directory: %s.", string);
+        free(string);
+        return 0;
+    }
     
 	char new_dir[LOCALE_NAME_MAX_LENGTH];
     GetDirectory(string, new_dir);
+
+    free(string);
 
     if(DoesFolderExist(new_dir)) return 0;
 
@@ -103,8 +148,6 @@ cell AMX_NATIVE_CALL MkDir(AMX* amx, cell* params)
 #endif
 	
 	logprintf(str);
-
-    logprintf((char*) "MkDir finished");
 
     free(str);
     return 1;

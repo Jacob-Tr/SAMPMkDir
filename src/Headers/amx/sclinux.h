@@ -44,8 +44,8 @@
 # define __BIG_ENDIAN    BIG_ENDIAN
 #endif
 
-#if !defined __BYTE_ORDER
-# error	"Can't figure computer byte order (__BYTE_ORDER macro not found)"
+#if !defined __BYTE_ORDER && !defined __BYTE_ORDER__
+#error	"Can't figure computer byte order (__BYTE_ORDER macro not found)"
 #endif
 
 #endif /* SCLINUX_H */

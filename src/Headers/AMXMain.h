@@ -60,12 +60,21 @@ int DoesStrContainChar(const char* string, char ch, size_t size)
 {
 	for(unsigned int i = 0; i <= size; i++)
 	{
-		if(string[i] == NULL || i >= strlen(string)) return 0;
+		if((char) string[i] == '\0' || i >= strlen(string)) return 0;
 		if(string[i] == ch) return 1;
 	}
 
 	return 0;
 }
+
+/*size_t amx_strlen(const cell* string)
+{
+	cell current_char = 1;
+	unsigned short length = 0;
+	while(current_char != '\0') current_char = *(string + length++);
+
+	return (size_t) length;
+}*/
 
 int DoesStrContainDisallowedChars(const char* string)
 {
