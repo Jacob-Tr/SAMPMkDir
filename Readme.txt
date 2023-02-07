@@ -11,5 +11,5 @@
  Some bug fixes.
  'RmDir()' and 'ChDir()' native functions added. (Remove Directory and Check Directory(existence) respectively)
 13/06/2022 - 
-  Some bug fixed.
+  Some bug fixes.
   Updated SDK to latest version.
