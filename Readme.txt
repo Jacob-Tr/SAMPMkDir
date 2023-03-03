@@ -13,3 +13,5 @@
 13/06/2022 - 
   Some bug fixes.
   Updated SDK to latest version.
+03/03/2023 - 
+  Bug fix.
