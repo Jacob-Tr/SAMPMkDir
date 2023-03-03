@@ -1,7 +1,7 @@
 #if defined __DEFINED_MKDIR__
         #endscript
 #else
-	#define __DEFFINED_MKDIR__
+	#define __DEFINED_MKDIR__
 #endif
 
 native MkDir(folder_name[]);
